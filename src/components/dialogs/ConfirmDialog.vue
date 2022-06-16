@@ -2,9 +2,9 @@
   <div :class="{ 'inline-block': inlineButton }">
     <v-btn
       color="primary"
-      @click.prevent="show = true"
+      @click.prevent="Show = true"
       :loading="loading"
-      :disabled="loading"
+      :disabled="loading || disabled"
     >
       <slot name="buttonText">
         {{ buttonText }}
@@ -88,6 +88,16 @@ export default {
       default: false,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    validateBeforeOpening: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
   data() {
     return {
@@ -102,8 +112,12 @@ export default {
         return this.show;
       },
       set(payload) {
-        this.show = payload;
-        this.emitInput();
+        this.emitBeforeShow();
+        
+        if (!this.validateBeforeOpening) {
+          this.show = payload;
+          this.emitInput();
+        }
       },
     },
     Cancel: {
@@ -141,6 +155,9 @@ export default {
     },
     emitConfirm() {
       this.$emit("confirm", this.confirm);
+    },
+    emitBeforeShow(){
+      this.$emit('beforeShow', null)
     },
     emitInput() {
       this.$emit("input", this.show);

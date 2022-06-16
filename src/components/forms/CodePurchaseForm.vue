@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ValidationObserver ref="observer">
+    <ValidationObserver ref="observer" v-slot="{ invalid }">
       <v-form ref="form">
         <v-card class="mx-auto my-12">
           <v-list-item class="sticky-top border-bottom">
@@ -12,11 +12,13 @@
             <v-list-item-action>
               <ConfirmDialog
                 @confirm="insert"
-                button-text="Cadastrar"
+                button-text="Comprar"
                 max-width="900px"
                 message="Tem Certeza que deseja efetuar a compra?"
                 confirm-action="Comprar"
                 :loading="inserting"
+                :validate-before-opening="invalid"
+                @beforeShow="validate"
               >
                 <v-row>
                   <v-col>
@@ -118,6 +120,10 @@ export default {
     },
     reset() {
       this.$refs.form.reset();
+
+      this.$nextTick(() => {
+        this.$refs.observer.reset();
+      });
     },
   },
 };
