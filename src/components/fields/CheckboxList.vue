@@ -67,4 +67,7 @@ export default {
 </script>
 
 <style>
+.v-messages {
+  min-height: 0px!important;
+}
 </style>
